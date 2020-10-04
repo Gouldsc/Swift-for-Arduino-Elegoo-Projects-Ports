@@ -18,8 +18,16 @@ build.
 
 import AVR
 
-typealias PWMPin = Pin
 typealias RGBColorValue = UInt8    //  Between 0 and 255
+
+enum PWMPin: Pin {
+    case D3 = 3
+    case D5 = 5
+    case D6 = 6
+    case D9 = 9
+    case D10 = 10
+    case D11 = 11
+}
 
 struct Color
 {
@@ -45,22 +53,22 @@ struct RGBLED
 
         self.color = color
 
-        pinMode( pin: redPin, mode: OUTPUT )
-        pinMode( pin: greenPin, mode: OUTPUT )
-        pinMode( pin: bluePin, mode: OUTPUT )
+        pinMode( pin: redPin.rawValue, mode: OUTPUT )
+        pinMode( pin: greenPin.rawValue, mode: OUTPUT )
+        pinMode( pin: bluePin.rawValue, mode: OUTPUT )
     }
 
     func updateColor()
     {
-        analogWrite( pin: redPin, value: self.color.red )
-        analogWrite( pin: greenPin, value: self.color.green )
-        analogWrite( pin: bluePin, value: self.color.blue )
+        analogWrite( pin: redPin.rawValue, value: self.color.red )
+        analogWrite( pin: greenPin.rawValue, value: self.color.green )
+        analogWrite( pin: bluePin.rawValue, value: self.color.blue )
     }
 
 }
 
 let color = Color( red: 255, green: 0, blue: 0 )
-var coloredLED = RGBLED( color: color, redPin: 6, greenPin: 5, bluePin: 3 )
+var coloredLED = RGBLED( color: color, redPin: .D6, greenPin: .D5, bluePin: .D3 )
 let delayTime: Milliseconds = 10
 
 // Main Loop
