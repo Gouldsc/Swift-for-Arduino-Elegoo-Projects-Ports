@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
-// Digital_Inputs.swift4a
+// Servo.swift4a
 // Swift For Arduino
 //
-// Created by Scott Gould on 09/26/2020.
+// Created by Scott Gould on 10/05/2020.
 // Copyright © 2020 Scott Gould. All rights reserved.
 //
 // This is a port of Elegoo's 2560 most complete starter kit code:
