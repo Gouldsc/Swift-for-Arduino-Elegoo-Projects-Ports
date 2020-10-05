@@ -64,7 +64,7 @@ struct Servo
 
     private func updateAngle( to angle: Angle )
     {
-        let pulseDuration = Microseconds( self._angle * scaleFactor + 1000 )    //  Servos will have a minimum pulse duration of 1000 and a maximum of 2000 Microseconds of HIGH output followed by LOW output for the remainder of the period. The desired angle will correspond to a value in that range between 0 and the maximumAngle
+        let pulseDuration = Microseconds( _angle * scaleFactor + 1000 )    //  Servos will have a minimum pulse duration of 1000 and a maximum of 2000 Microseconds of HIGH output followed by LOW output for the remainder of the period. The desired angle will correspond to a value in that range between 0 and the maximumAngle
         executeAsync( after: period, repeats: true )
         {
             servoPulseSignal( withDuration: pulseDuration )
