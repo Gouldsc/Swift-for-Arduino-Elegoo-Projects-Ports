@@ -14,7 +14,6 @@
 // NOTE: Modifications to the "Libraries:" comment line below will affect the build.
 // Libraries:
 //------------------------------------------------------------------------------
-
 import AVR
 
 enum PWMPin: Pin
@@ -29,6 +28,17 @@ enum PWMPin: Pin
 typealias Hertz = UInt8
 typealias Angle = UInt16
 
+private func transmitPulseSignal( onPin pin: PWMPin, forDuration duration: Microseconds, atFrequency frequency: Hertz )
+{
+    let period: Milliseconds = 1000 / UInt16( frequency )
+    executeAsync( after: period, repeats: true )
+    {
+        digitalWrite( pin: pin.rawValue, value: HIGH )
+        delay( us: duration )
+        digitalWrite( pin: pin.rawValue, value: LOW )
+    }
+}
+
 struct Servo
 {
     private let servoControlPin: PWMPin
@@ -38,7 +48,7 @@ struct Servo
         set
         {
             self._angle = (newValue > maximumAngle) ? maximumAngle : newValue
-            self.updateAngle( to: self._angle )
+            self.updateAngle( to: _angle )
         }
         get
         {
@@ -46,18 +56,22 @@ struct Servo
         }
     }
     private var _angle: Angle = 0
-    private let frequency: Hertz = 50
-    private let period: Milliseconds    //  Time in Milliseconds between pulses, 20ms is common for servos.
+    private let frequency: Hertz
     private let scaleFactor: UInt16
 
     init( servoControlPin: PWMPin, maximumAngle: Angle = 180, frequency: Hertz = 50 )
     {
         self.servoControlPin = servoControlPin
+        guard maximumAngle != 0
+        else
+        {
+            fatalError()    //    maximumAngle cannot be 0
+        }
+
         self.maximumAngle = (maximumAngle > 360) ? 360 : maximumAngle
         //  TODO: Need to add code to handle continuous rotation servo motors or specifically exclude them and create a separate struct
-
-        self.period = 1000 / UInt16( self.frequency )
         self.scaleFactor = 1000 / maximumAngle
+        self.frequency = frequency
 
         pinMode( pin: servoControlPin.rawValue, mode: OUTPUT )
     }
@@ -65,24 +79,13 @@ struct Servo
     private func updateAngle( to angle: Angle )
     {
         let pulseDuration = Microseconds( _angle * scaleFactor + 1000 )    //  Servos will have a minimum pulse duration of 1000 and a maximum of 2000 Microseconds of HIGH output followed by LOW output for the remainder of the period. The desired angle will correspond to a value in that range between 0 and the maximumAngle
-        executeAsync( after: period, repeats: true )
-        {
-            servoPulseSignal( withDuration: pulseDuration )
-        }
-    }
-
-    private func servoPulseSignal( withDuration duration: Microseconds )
-    {
-        digitalWrite( pin: servoControlPin.rawValue, value: HIGH )
-        delay( us: duration )
-        digitalWrite( pin: servoControlPin.rawValue, value: LOW )
-    }
+        transmitPulseSignal( onPin: servoControlPin, forDuration: pulseDuration, atFrequency: frequency )
+   }
 }
 
 var servo = Servo( servoControlPin: .D3 )
 
 // Main Loop
-
 while( true )
 {
     servo.angle = 0
