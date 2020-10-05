@@ -20,7 +20,8 @@ import AVR
 
 typealias RGBColorValue = UInt8    //  Between 0 and 255
 
-enum PWMPin: Pin {
+enum PWMPin: Pin
+{
     case D3 = 3
     case D5 = 5
     case D6 = 6
