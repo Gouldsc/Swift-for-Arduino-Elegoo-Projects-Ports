@@ -38,7 +38,7 @@ struct Servo
         set
         {
             self._angle = (newValue > maximumAngle) ? maximumAngle : newValue
-            self.updateAngle( to: newValue )
+            self.updateAngle( to: self._angle )
         }
         get
         {
