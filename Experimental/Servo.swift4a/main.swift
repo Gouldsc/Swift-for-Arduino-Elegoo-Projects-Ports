@@ -28,14 +28,25 @@ enum PWMPin: Pin
 typealias Hertz = UInt8
 typealias Angle = UInt16
 
+private var servoPin: Pin = 0
+private var servoPulseDuration: Microseconds = 0
+
+private func pulse() {
+    digitalWrite( pin: servoPin, value: HIGH )
+    delay( us: servoPulseDuration )
+    digitalWrite( pin: servoPin, value: LOW )
+}
+
 private func transmitPulseSignal( onPin pin: PWMPin, forDuration duration: Microseconds, atFrequency frequency: Hertz )
 {
     let period: Milliseconds = 1000 / UInt16( frequency )
+
+    servoPin = pin.rawValue
+    servoPulseDuration = duration
+    
     executeAsync( after: period, repeats: true )
     {
-        digitalWrite( pin: pin.rawValue, value: HIGH )
-        delay( us: duration )
-        digitalWrite( pin: pin.rawValue, value: LOW )
+        pulse()
     }
 }
 
