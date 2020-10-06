@@ -1,9 +1,11 @@
 # Swift-for-Arduino-Elegoo-Projects-Ports
 These are ports of Elegoo's Arduino Projects into uSwift, a project that runs a subset of Swift on Arduino microcontrollers
+
 Link to Swift for Arduino's Project page:
 https://github.com/swiftforarduino/community
 
 These are ports from Elegoo's "THE MOST COMPLETE STARTER KIT TUTORIAL FOR MEGA 2560" being run on an Arduino Uno
+
 link to elegoo's product page:
 https://www.elegoo.com/product/elegoo-mega-2560-project-the-most-complete-starter-kit/
 
